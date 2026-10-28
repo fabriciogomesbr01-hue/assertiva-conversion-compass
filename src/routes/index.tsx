@@ -77,22 +77,25 @@ function track(event: string) {
 }
 
 function LeadForm({ id }: { id?: string }) {
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState<{ nome: string; msg: string } | null>(null);
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    const msg = `Olá! Quero uma análise gratuita da minha carteira.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nWhatsApp: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nVolume em atraso: ${f.get("volume")}`;
+    const msg = `Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nWhatsApp: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nVolume em atraso: ${f.get("volume")}`;
     track("generate_lead");
-    setSent(true);
-    window.open(waLink(msg), "_blank");
+    setSent({ nome: String(f.get("nome") || "").split(" ")[0], msg });
   };
   const field = "w-full rounded-lg border border-input bg-background/60 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-ring/30";
   if (sent)
     return (
       <div id={id} className="rounded-2xl border border-primary/40 bg-card p-8 text-center shadow-glow">
         <Check className="mx-auto size-12 rounded-full bg-primary p-2 text-primary-foreground" />
-        <h3 className="mt-4 text-2xl font-bold">Recebemos seu pedido!</h3>
-        <p className="mt-2 text-sm text-muted-foreground">Um especialista vai falar com você no WhatsApp em instantes, em horário comercial.</p>
+        <h3 className="mt-4 text-2xl font-bold">Obrigado{sent.nome ? `, ${sent.nome}` : ""}!</h3>
+        <p className="mt-2 text-sm text-muted-foreground">Recebemos seus dados. Um especialista da Assertiva vai entrar em contato em até 1 dia útil.</p>
+        <p className="mt-6 text-sm font-semibold">Quer agilizar? Fale agora com a gente:</p>
+        <a href={waLink(sent.msg)} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click")} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-bold text-primary-foreground hover:brightness-110">
+          <MessageCircle className="size-5" /> Enviar pelo WhatsApp
+        </a>
       </div>
     );
   return (
@@ -126,7 +129,6 @@ function LeadForm({ id }: { id?: string }) {
 
 function Landing() {
   const [open, setOpen] = useState<number | null>(0);
-  const wa = waLink("Olá! Vim pelo site e quero falar sobre cobrança da minha carteira.");
   return (
     <main className="overflow-x-hidden pb-20 md:pb-0">
       {/* Header */}
@@ -263,23 +265,20 @@ function Landing() {
         <div className="mx-auto max-w-4xl px-5 py-20 text-center">
           <h2 className="text-3xl font-bold sm:text-5xl">Pronto para seu crédito <span className="text-gradient">render mais?</span></h2>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground">Receba uma análise gratuita da sua carteira e descubra quanto é possível recuperar.</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="mt-8 flex justify-center">
             <a href="#form" className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-7 py-4 font-bold text-primary-foreground hover:brightness-110">Quero minha análise gratuita <ArrowRight className="size-5" /></a>
-            <a href={wa} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click")} className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary px-7 py-4 font-bold text-primary hover:bg-primary/10"><MessageCircle className="size-5" /> Falar no WhatsApp</a>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-border py-8 text-center text-xs text-muted-foreground">
+      <footer className="border-t border-border py-8 pb-24 text-center text-xs text-muted-foreground md:pb-8">
         © {new Date().getFullYear()} Assertiva Multicanalidade · Recuperação de Crédito · <a href="https://assertivarc.com.br" className="underline">assertivarc.com.br</a>
       </footer>
 
       {/* Mobile sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
-        <a href="#form" className="rounded-lg bg-primary py-3 text-center text-sm font-bold text-primary-foreground">Análise gratuita</a>
-        <a href={wa} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click")} className="flex items-center justify-center gap-1.5 rounded-lg border border-primary py-3 text-sm font-bold text-primary"><MessageCircle className="size-4" /> WhatsApp</a>
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
+        <a href="#form" className="block rounded-lg bg-primary py-3 text-center text-sm font-bold text-primary-foreground">Quero minha análise gratuita</a>
       </div>
-      <a href={wa} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click")} aria-label="WhatsApp" className="fixed bottom-6 right-6 z-50 hidden rounded-full bg-primary p-4 text-primary-foreground shadow-glow md:block"><MessageCircle className="size-6" /></a>
     </main>
   );
 }
