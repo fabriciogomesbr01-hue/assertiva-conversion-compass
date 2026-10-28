@@ -41,7 +41,7 @@ export const Route = createFileRoute("/")({
 const logos = [
   { src: "/logos/logo_5_sicredi_final.png", alt: "Sicredi" },
   { src: "/logos/logo_4_sicoob_final.png", alt: "Sicoob" },
-  { src: "/logos/logo_1_banestes_final.png", alt: "Banestes" },
+  { src: "/logos/logo_1_banestes_final.png", alt: "Horizontes Fibra" },
   { src: "/logos/logo_2_grupo_lima_final.png", alt: "Grupo Lima" },
 ];
 
@@ -132,7 +132,7 @@ function Landing() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-          <img src="/logos/logo-assertiva.png" alt="Assertiva Multicanalidade" className="h-10 w-auto" />
+          <img src="/logos/logo-assertiva.png" alt="Assertiva Multicanalidade" className="h-14 w-auto" />
           <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
         </div>
       </header>
