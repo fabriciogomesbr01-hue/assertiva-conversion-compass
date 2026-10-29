@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   Check,
@@ -43,7 +43,8 @@ const logos = [
   { src: "/logos/logo_5_sicredi_final.png", alt: "Sicredi", w: 382, h: 96 },
   { src: "/logos/logo_4_sicoob_final.png", alt: "Sicoob", w: 423, h: 96 },
   { src: "/logos/logo_1_banestes_final.png", alt: "Horizontes Fibra", w: 506, h: 96 },
-  { src: "/logos/logo_2_grupo_lima_final.png", alt: "Grupo Lima", w: 96, h: 96 },
+  // Logo quadrado: precisa de mais altura para ter o mesmo peso visual dos logos horizontais.
+  { src: "/logos/logo_2_grupo_lima_final.png", alt: "Grupo Lima", w: 160, h: 160, square: true },
 ];
 
 const services = [
@@ -156,6 +157,15 @@ function LeadForm({ id }: { id?: string }) {
 
 function Landing() {
   const [open, setOpen] = useState<number | null>(0);
+  // Esconde o botão fixo do celular enquanto o formulário está na tela (evita cobrir os campos).
+  const [formVisible, setFormVisible] = useState(false);
+  useEffect(() => {
+    const form = document.getElementById("form");
+    if (!form || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => setFormVisible(!!e?.isIntersecting), { threshold: 0.15 });
+    io.observe(form);
+    return () => io.disconnect();
+  }, []);
   return (
     <main className="overflow-x-hidden pb-20 md:pb-0">
       {/* Header */}
@@ -169,29 +179,34 @@ function Landing() {
       {/* Hero */}
       <section className="relative bg-hero">
         <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 lg:grid-cols-[1.1fr_1fr] lg:py-20">
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+        {/* No celular: título → formulário → benefícios, para o formulário aparecer logo na primeira rolagem. */}
+        <div className="relative mx-auto grid max-w-6xl gap-x-12 gap-y-7 px-5 py-8 sm:py-14 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[auto_1fr] lg:gap-y-0 lg:py-20">
+          <div className="lg:self-end">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary sm:text-xs">
               <Sparkles className="size-3.5" /> Empresa de cobrança · 20+ anos
             </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 text-[2rem] font-extrabold leading-[1.08] sm:mt-5 sm:text-5xl lg:text-6xl">
               Terceirize sua cobrança e <span className="text-gradient">recupere mais crédito</span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+            <p className="mt-4 max-w-xl text-base text-muted-foreground sm:mt-5 sm:text-lg">
               Assessoria de cobrança extrajudicial humanizada e multicanal, com inteligência artificial e mais de 250 milhões de dados para localizar e negociar com seus inadimplentes.
             </p>
-            <ul className="mt-6 grid gap-2 text-sm sm:grid-cols-2">
+          </div>
+          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
+            <LeadForm id="form" />
+          </div>
+          <div className="lg:self-start">
+            <ul className="grid gap-2 text-sm sm:grid-cols-2 lg:mt-6">
               {["Cobrança extrajudicial e judicial", "Robô de negociação 24/7", "Visita externa em todo o Brasil", "Relatórios e BI em tempo real"].map((b) => (
                 <li key={b} className="flex items-center gap-2"><Check className="size-4 shrink-0 text-primary" />{b}</li>
               ))}
             </ul>
-            <div className="mt-8 grid max-w-md grid-cols-3 gap-4 border-t border-border pt-6">
+            <div className="mt-6 grid max-w-md grid-cols-3 gap-4 border-t border-border pt-6 sm:mt-8">
               {[["20+", "anos de mercado"], ["250MM", "dados na base"], ["24/7", "negociação digital"]].map(([n, l]) => (
-                <div key={l}><div className="font-display text-3xl font-bold text-primary">{n}</div><div className="text-xs text-muted-foreground">{l}</div></div>
+                <div key={l}><div className="font-display text-2xl font-bold text-primary sm:text-3xl">{n}</div><div className="text-xs text-muted-foreground">{l}</div></div>
               ))}
             </div>
           </div>
-          <LeadForm id="form" />
         </div>
       </section>
 
@@ -199,8 +214,11 @@ function Landing() {
       <section className="bg-paper py-10 text-paper-foreground">
         <div className="mx-auto max-w-6xl px-5 text-center">
           <p className="text-sm font-semibold">Recuperando ativos de grandes cooperativas, bancos e empresas</p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-            {logos.map((l) => <img key={l.alt} src={l.src} alt={l.alt} width={l.w} height={l.h} className="h-10 w-auto object-contain md:h-12" loading="lazy" decoding="async" />)}
+          <div className="mt-6 grid grid-cols-2 items-center justify-items-center gap-x-6 gap-y-6 md:flex md:flex-wrap md:justify-center md:gap-x-14">
+            {logos.map((l) => (
+              <img key={l.alt} src={l.src} alt={l.alt} width={l.w} height={l.h} loading="lazy" decoding="async"
+                className={`w-auto max-w-full object-contain ${l.square ? "h-16 md:h-20" : "h-8 sm:h-10 md:h-12"}`} />
+            ))}
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-sm opacity-75">Cadastrados no <strong>CAS do Sicredi</strong>: mais de 100 cooperativas podem nos contratar de imediato.</p>
         </div>
@@ -301,7 +319,7 @@ function Landing() {
       <SiteFooter />
 
       {/* Mobile sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
+      <div className={`fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform md:hidden ${formVisible ? "translate-y-full" : ""}`} aria-hidden={formVisible}>
         <a href="#form" className="block rounded-lg bg-primary py-3 text-center text-sm font-bold text-primary-foreground">Quero minha análise gratuita</a>
       </div>
     </main>
