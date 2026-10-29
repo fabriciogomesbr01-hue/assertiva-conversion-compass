@@ -21,7 +21,7 @@ export const SITE_URL = "https://lp.assertivarc.com.br";
 // Ele é enviado ao dataLayer pela página /obrigado, só depois de um envio de formulário com sucesso
 // (acessos diretos ou recarregamentos do /obrigado não disparam). Cliques no WhatsApp geram "whatsapp_click",
 // que pode ser usado como conversão secundária, sem entrar nos lances.
-export const GTM_ID = "";
+export const GTM_ID = "GTM-KG6C63QG";
 
 export const telHref = (phone: string) => `tel:+55${phone.replace(/\D/g, "")}`;
 // WhatsApp do comercial que recebe os leads no botão da página /obrigado.
