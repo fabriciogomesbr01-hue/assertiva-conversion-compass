@@ -8,7 +8,6 @@ import {
   FileText,
   Headphones,
   MapPin,
-  Phone,
   Scale,
   ShieldCheck,
   Sparkles,
@@ -17,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { COMPANY, LEAD_KEY, SITE_URL, telHref, track } from "@/lib/company";
+import { COMPANY, LEAD_KEY, SITE_URL, sendLead, track } from "@/lib/company";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -74,15 +73,30 @@ const faqs = [
 
 function LeadForm({ id }: { id?: string }) {
   const navigate = useNavigate();
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    const msg = `Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nWhatsApp: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nVolume em atraso: ${f.get("volume")}`;
+    if (f.get("_honey")) return; // Campo invisível preenchido: robô de spam.
+    setStatus("sending");
+    try {
+      await sendLead({
+        Nome: String(f.get("nome")),
+        Empresa: String(f.get("empresa")),
+        Telefone: String(f.get("telefone")),
+        Segmento: String(f.get("segmento")),
+        "Valor em atraso": String(f.get("volume")),
+        Origem: window.location.href,
+      });
+    } catch {
+      setStatus("error");
+      return;
+    }
     track("generate_lead", { segmento: f.get("segmento"), volume: f.get("volume") });
     try {
-      sessionStorage.setItem(LEAD_KEY, JSON.stringify({ nome: String(f.get("nome") || "").split(" ")[0], msg }));
+      sessionStorage.setItem(LEAD_KEY, String(f.get("nome") || "").split(" ")[0]);
     } catch {
-      // Sem sessionStorage: a página de obrigado usa a mensagem padrão.
+      // Sem sessionStorage: a página de obrigado não mostra o nome.
     }
     navigate({ to: "/obrigado" });
   };
@@ -92,6 +106,7 @@ function LeadForm({ id }: { id?: string }) {
       <h2 className="text-2xl font-bold">Análise gratuita da sua carteira</h2>
       <p className="mt-1 text-sm text-muted-foreground">Sem custo e sem compromisso. Resposta de um especialista em até 1 dia útil.</p>
       <div className="mt-6 grid gap-3">
+        <input type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
         <label className="sr-only" htmlFor="nome">Seu nome</label>
         <input required id="nome" name="nome" autoComplete="name" placeholder="Seu nome" className={field} />
         <label className="sr-only" htmlFor="empresa">Empresa ou cooperativa</label>
@@ -112,9 +127,14 @@ function LeadForm({ id }: { id?: string }) {
           <option>R$ 500 mil a R$ 2 milhões</option>
           <option>Acima de R$ 2 milhões</option>
         </select>
-        <button type="submit" className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-display text-base font-bold text-primary-foreground transition hover:brightness-110">
-          Quero recuperar meu crédito <ArrowRight className="size-5" />
+        <button type="submit" disabled={status === "sending"} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-display text-base font-bold text-primary-foreground transition hover:brightness-110 disabled:cursor-wait disabled:opacity-70">
+          {status === "sending" ? "Enviando..." : <>Quero recuperar meu crédito <ArrowRight className="size-5" /></>}
         </button>
+        {status === "error" && (
+          <p role="alert" className="text-sm text-destructive">
+            Não foi possível enviar agora. Tente novamente ou ligue para {COMPANY.phones[0]}.
+          </p>
+        )}
       </div>
       <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
         <ShieldCheck className="size-4 shrink-0 text-primary" />
@@ -135,12 +155,7 @@ function Landing() {
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
           <img src="/logos/logo-assertiva.png" alt={COMPANY.name} width={237} height={120} fetchPriority="high" className="h-14 w-auto" />
-          <div className="flex items-center gap-4">
-            <a href={telHref(COMPANY.phones[0])} onClick={() => track("phone_click", { location: "header" })} className="hidden items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground sm:inline-flex">
-              <Phone className="size-4 text-primary" /> {COMPANY.phones[0]}
-            </a>
-            <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
-          </div>
+          <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
         </div>
       </header>
 

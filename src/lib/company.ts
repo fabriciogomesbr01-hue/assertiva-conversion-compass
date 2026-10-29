@@ -33,3 +33,25 @@ export function track(event: string, params: Record<string, unknown> = {}) {
 
 // Chave do sessionStorage que leva os dados do formulário até a página /obrigado.
 export const LEAD_KEY = "assertiva-lead";
+
+// Destinatários dos contatos do formulário. O envio é feito pelo FormSubmit (formsubmit.co):
+// no primeiro envio, o FormSubmit manda um e-mail de ativação para o primeiro endereço; é preciso confirmar
+// uma única vez para os contatos começarem a chegar.
+export const LEAD_EMAILS = ["alexandrer@assertivarc.com.br", "fabricio@assertivarc.com.br"];
+
+export async function sendLead(fields: Record<string, string>) {
+  const [to, ...cc] = LEAD_EMAILS;
+  const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({
+      ...fields,
+      _subject: `Novo contato pela landing page: ${fields.Empresa || fields.Nome}`,
+      _cc: cc.join(","),
+      _template: "table",
+      _captcha: "false",
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as { success?: string | boolean };
+  if (!res.ok || String(data.success) === "false") throw new Error("Falha ao enviar o formulário");
+}
