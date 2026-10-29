@@ -94,7 +94,7 @@ function LeadForm({ id }: { id?: string }) {
     }
     // O evento de conversão (generate_lead) é disparado pela página /obrigado, a partir destes dados.
     const lead: Lead = {
-      nome: String(f.get("nome") || "").split(" ")[0],
+      nome: String(f.get("nome") || "").split(" ")[0] ?? "",
       segmento: String(f.get("segmento")),
       volume: String(f.get("volume")),
       msg: `Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nTelefone: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nValor em atraso: ${f.get("volume")}`,

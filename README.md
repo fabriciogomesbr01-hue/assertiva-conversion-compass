@@ -1,30 +1,28 @@
-# Assertiva Conversion Compass
+# Landing page Assertiva (Google Ads)
 
-quero que você produza uma página de landing page para anúncio no google para a assertiva: https://assertivarc.com.br/
+Landing page de captação de leads da Assertiva Multicanalidade para campanhas no Google Ads.
+Publicada em **https://lp.assertivarc.com.br** via GitHub Pages.
 
-quero que seja com base nessa página: https://hipercob.com.br/?gad_source=1&gad_campaignid=11433551710&gbraid=0AAAAAB-InQYKfhRZLEdpVpT2_W9SdEuFY&gclid=CjwKCAjwuobXBhBXEiwAYUaIlRLN8OkUDxuO5LghiAjAzLJ36DnNcGP4SzWmRr-x6ytz6sRE5MSMYhoC51cQAvD_BwE
+## Como funciona
 
-quero que ela seja muito boa, objetiva, direta ao ponto o suficiente para performar bem no google ads, quero que pense que o objetivo dela vai ser gerar bons resultados no @connector:google_ads:"Google Ads"  para uma campanha, quero também que você se baseie nas principais palavras-chave que encontrei que fazem sentido para uma campanha como essa que estão no material anexado do planejador do google. Importante, coloquei a página da hipercob como EXEMPLO porque achei a estrutura boa, mas a identidade visual e a cara da landing page tem que ser da ASSERTIVA, então faça ela por favor pensando que tem que ser uma boa página para conversão no Google ads, decida se fica melhor entre a conversão ser whatsapp ou formulário para google ads, lembrando que o objetivo é que realmente a página fique boa para uma campanha e objetiva, mas com informações do próprio site da assertiva
+- Site estático: TanStack Start + Vite pré-renderiza todas as páginas em `dist/client`.
+- Cada envio para o `main` roda o workflow `.github/workflows/deploy.yml`, que testa, gera e publica o site.
+- Formulário: envia os contatos por e-mail via FormSubmit (destinatários em `src/lib/company.ts`).
+- Conversão: o evento `generate_lead` vai para o `dataLayer` na página `/obrigado`, uma vez por envio.
 
-This project was built with [Lovable](https://lovable.dev).
+## Configuração
 
-**Live app**: https://assertiva-conversion-compass.lovable.app
+Tudo que muda com frequência fica em `src/lib/company.ts`: dados da empresa (CNPJ, razão social, e-mail),
+telefones, WhatsApp, e-mails que recebem os leads, ID do Google Tag Manager e URL do site.
+Se a URL mudar, atualize também `public/CNAME`, `public/sitemap.xml` e `public/robots.txt`.
 
-## Build with Lovable
+## Desenvolvimento
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/35716189-d5b1-44aa-8f4c-eae01189faa9).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requer Node.js 24 ou mais recente.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+npm install
+npm run dev      # servidor local
+npm test         # testes
+npm run build    # gera o site estático em dist/client
 ```

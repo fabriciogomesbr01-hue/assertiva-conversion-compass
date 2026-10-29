@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://assertiva-conversion-compass.lovable.app/sitemap.xml
+Sitemap: https://lp.assertivarc.com.br/sitemap.xml

@@ -46,7 +46,7 @@ export function CookieBanner() {
 
   if (!visible) return null;
   return (
-    <div role="dialog" aria-label="Aviso de cookies" className="fixed inset-x-3 bottom-20 z-[60] mx-auto max-w-xl rounded-xl border border-border bg-card p-4 text-sm shadow-lg md:bottom-4">
+    <div role="dialog" aria-label="Aviso de cookies" className="fixed inset-x-3 bottom-20 z-[60] rounded-xl border border-border bg-card p-4 text-sm shadow-lg md:inset-x-auto md:bottom-4 md:left-4 md:max-w-sm">
       <p className="text-muted-foreground">
         Usamos cookies para medir o desempenho dos nossos anúncios e melhorar sua experiência. Saiba mais na nossa{" "}
         <Link to="/politica-de-privacidade" className="font-semibold text-foreground underline">Política de Privacidade</Link>.

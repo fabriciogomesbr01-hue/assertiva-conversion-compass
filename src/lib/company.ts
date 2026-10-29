@@ -14,7 +14,7 @@ export const COMPANY = {
 };
 
 // URL pública desta landing page (usada em canonical, og:url e sitemap).
-export const SITE_URL = "https://assertiva-conversion-compass.lovable.app";
+export const SITE_URL = "https://lp.assertivarc.com.br";
 
 // ID do Google Tag Manager (ex.: "GTM-XXXXXXX"). Vazio = nenhuma tag é carregada.
 // No GTM, configure a conversão do Google Ads com um acionador de evento personalizado "generate_lead".
@@ -48,7 +48,7 @@ export async function sendLead(fields: Record<string, string>) {
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
       ...fields,
-      _subject: `Novo contato pela landing page: ${fields.Empresa || fields.Nome}`,
+      _subject: `Novo contato pela landing page: ${fields["Empresa"] || fields["Nome"]}`,
       _cc: cc.join(","),
       _template: "table",
       _captcha: "false",
