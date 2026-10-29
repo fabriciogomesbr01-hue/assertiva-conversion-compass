@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import {
   ArrowRight,
@@ -8,7 +8,7 @@ import {
   FileText,
   Headphones,
   MapPin,
-  MessageCircle,
+  Phone,
   Scale,
   ShieldCheck,
   Sparkles,
@@ -16,8 +16,8 @@ import {
   Zap,
 } from "lucide-react";
 
-const WHATSAPP = "5527996062121";
-const waLink = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { COMPANY, LEAD_KEY, SITE_URL, telHref, track } from "@/lib/company";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,23 +26,25 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Assessoria de cobrança extrajudicial com 20+ anos de mercado, IA e 250 milhões de dados. Terceirize a cobrança da sua empresa e recupere mais. Análise gratuita.",
+          "Assessoria de cobrança extrajudicial com mais de 20 anos de mercado, IA e base com 250 milhões de dados. Terceirize a cobrança da sua empresa. Análise gratuita.",
       },
       { property: "og:title", content: "Assertiva | Empresa de Cobrança e Recuperação de Crédito" },
       {
         property: "og:description",
         content: "Cobrança extrajudicial humanizada e multicanal para bancos, cooperativas e empresas. Solicite uma análise gratuita da sua carteira.",
       },
+      { property: "og:url", content: SITE_URL },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: Landing,
 });
 
 const logos = [
-  { src: "/logos/logo_5_sicredi_final.png", alt: "Sicredi" },
-  { src: "/logos/logo_4_sicoob_final.png", alt: "Sicoob" },
-  { src: "/logos/logo_1_banestes_final.png", alt: "Horizontes Fibra" },
-  { src: "/logos/logo_2_grupo_lima_final.png", alt: "Grupo Lima" },
+  { src: "/logos/logo_5_sicredi_final.png", alt: "Sicredi", w: 382, h: 96 },
+  { src: "/logos/logo_4_sicoob_final.png", alt: "Sicoob", w: 423, h: 96 },
+  { src: "/logos/logo_1_banestes_final.png", alt: "Horizontes Fibra", w: 506, h: 96 },
+  { src: "/logos/logo_2_grupo_lima_final.png", alt: "Grupo Lima", w: 96, h: 96 },
 ];
 
 const services = [
@@ -50,7 +52,7 @@ const services = [
   { icon: Scale, t: "Cobrança Amigável e Judicial", d: "Estratégia escalonada por perfil, evitando judicialização precoce." },
   { icon: MapPin, t: "Visita Externa", d: "Equipe em todo o Brasil, com fotos, relatório e parecer conclusivo." },
   { icon: Truck, t: "Apreensão e Remoção", d: "Recuperação de garantias com procedimento legal assistido." },
-  { icon: Zap, t: "Cobrança Digital com IA", d: "Plataforma SALT: robô 24/7 no WhatsApp, SMS e web, 2x mais eficiente." },
+  { icon: Zap, t: "Cobrança Digital com IA", d: "Plataforma SALT: robô de negociação 24/7 no WhatsApp, SMS e web." },
   { icon: FileText, t: "Gestão de Documentos", d: "Higienização, guarda e controle de todo o ciclo documental." },
 ];
 
@@ -70,48 +72,40 @@ const faqs = [
   { q: "Vocês atuam em todo o Brasil?", a: "Sim. Operação digital nacional e equipe de visita externa fidelizada em todo o território." },
 ];
 
-function track(event: string) {
-  const w = window as unknown as { gtag?: (...a: unknown[]) => void; dataLayer?: unknown[] };
-  w.gtag?.("event", event);
-  w.dataLayer?.push({ event });
-}
-
 function LeadForm({ id }: { id?: string }) {
-  const [sent, setSent] = useState<{ nome: string; msg: string } | null>(null);
+  const navigate = useNavigate();
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const msg = `Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nWhatsApp: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nVolume em atraso: ${f.get("volume")}`;
-    track("generate_lead");
-    setSent({ nome: String(f.get("nome") || "").split(" ")[0], msg });
+    track("generate_lead", { segmento: f.get("segmento"), volume: f.get("volume") });
+    try {
+      sessionStorage.setItem(LEAD_KEY, JSON.stringify({ nome: String(f.get("nome") || "").split(" ")[0], msg }));
+    } catch {
+      // Sem sessionStorage: a página de obrigado usa a mensagem padrão.
+    }
+    navigate({ to: "/obrigado" });
   };
   const field = "w-full rounded-lg border border-input bg-background/60 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-ring/30";
-  if (sent)
-    return (
-      <div id={id} className="rounded-2xl border border-primary/40 bg-card p-8 text-center shadow-glow">
-        <Check className="mx-auto size-12 rounded-full bg-primary p-2 text-primary-foreground" />
-        <h3 className="mt-4 text-2xl font-bold">Obrigado{sent.nome ? `, ${sent.nome}` : ""}!</h3>
-        <p className="mt-2 text-sm text-muted-foreground">Recebemos seus dados. Um especialista da Assertiva vai entrar em contato em até 1 dia útil.</p>
-        <p className="mt-6 text-sm font-semibold">Quer agilizar? Fale agora com a gente:</p>
-        <a href={waLink(sent.msg)} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click")} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-bold text-primary-foreground hover:brightness-110">
-          <MessageCircle className="size-5" /> Enviar pelo WhatsApp
-        </a>
-      </div>
-    );
   return (
-    <form id={id} onSubmit={onSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-glow sm:p-8">
-      <h3 className="text-2xl font-bold">Análise gratuita da sua carteira</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Resposta de um especialista em até 1 dia útil.</p>
+    <form id={id} onSubmit={onSubmit} className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 shadow-glow sm:p-8">
+      <h2 className="text-2xl font-bold">Análise gratuita da sua carteira</h2>
+      <p className="mt-1 text-sm text-muted-foreground">Sem custo e sem compromisso. Resposta de um especialista em até 1 dia útil.</p>
       <div className="mt-6 grid gap-3">
-        <input required name="nome" placeholder="Seu nome" className={field} />
-        <input required name="empresa" placeholder="Empresa / Cooperativa" className={field} />
-        <input required name="telefone" type="tel" inputMode="tel" placeholder="WhatsApp com DDD" className={field} />
-        <select required name="segmento" defaultValue="" className={field}>
+        <label className="sr-only" htmlFor="nome">Seu nome</label>
+        <input required id="nome" name="nome" autoComplete="name" placeholder="Seu nome" className={field} />
+        <label className="sr-only" htmlFor="empresa">Empresa ou cooperativa</label>
+        <input required id="empresa" name="empresa" autoComplete="organization" placeholder="Empresa / Cooperativa" className={field} />
+        <label className="sr-only" htmlFor="telefone">WhatsApp com DDD</label>
+        <input required id="telefone" name="telefone" type="tel" inputMode="tel" autoComplete="tel" minLength={10} placeholder="WhatsApp com DDD" className={field} />
+        <label className="sr-only" htmlFor="segmento">Segmento</label>
+        <select required id="segmento" name="segmento" defaultValue="" className={field}>
           <option value="" disabled>Segmento</option>
           {segments.map((s) => <option key={s}>{s}</option>)}
           <option>Outro</option>
         </select>
-        <select required name="volume" defaultValue="" className={field}>
+        <label className="sr-only" htmlFor="volume">Valor em atraso na carteira</label>
+        <select required id="volume" name="volume" defaultValue="" className={field}>
           <option value="" disabled>Valor em atraso na carteira</option>
           <option>Até R$ 100 mil</option>
           <option>R$ 100 mil a R$ 500 mil</option>
@@ -122,7 +116,13 @@ function LeadForm({ id }: { id?: string }) {
           Quero recuperar meu crédito <ArrowRight className="size-5" />
         </button>
       </div>
-      <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck className="size-4 text-primary" /> Seus dados estão protegidos conforme a LGPD.</p>
+      <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
+        <ShieldCheck className="size-4 shrink-0 text-primary" />
+        <span>
+          Ao enviar, você concorda em ser contatado pela Assertiva sobre esta solicitação. Seus dados são tratados conforme a LGPD e a nossa{" "}
+          <Link to="/politica-de-privacidade" className="underline hover:text-foreground">Política de Privacidade</Link>.
+        </span>
+      </p>
     </form>
   );
 }
@@ -134,8 +134,13 @@ function Landing() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-          <img src="/logos/logo-assertiva.png" alt="Assertiva Multicanalidade" className="h-14 w-auto" />
-          <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
+          <img src="/logos/logo-assertiva.png" alt={COMPANY.name} width={237} height={120} fetchPriority="high" className="h-14 w-auto" />
+          <div className="flex items-center gap-4">
+            <a href={telHref(COMPANY.phones[0])} onClick={() => track("phone_click", { location: "header" })} className="hidden items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground sm:inline-flex">
+              <Phone className="size-4 text-primary" /> {COMPANY.phones[0]}
+            </a>
+            <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
+          </div>
         </div>
       </header>
 
@@ -159,7 +164,7 @@ function Landing() {
               ))}
             </ul>
             <div className="mt-8 grid max-w-md grid-cols-3 gap-4 border-t border-border pt-6">
-              {[["20+", "anos de mercado"], ["250MM", "dados na base"], ["2x", "mais eficiência digital"]].map(([n, l]) => (
+              {[["20+", "anos de mercado"], ["250MM", "dados na base"], ["24/7", "negociação digital"]].map(([n, l]) => (
                 <div key={l}><div className="font-display text-3xl font-bold text-primary">{n}</div><div className="text-xs text-muted-foreground">{l}</div></div>
               ))}
             </div>
@@ -173,7 +178,7 @@ function Landing() {
         <div className="mx-auto max-w-6xl px-5 text-center">
           <p className="text-sm font-semibold">Recuperando ativos de grandes cooperativas, bancos e empresas</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-            {logos.map((l) => <img key={l.alt} src={l.src} alt={l.alt} className="h-10 w-auto object-contain md:h-12" loading="lazy" />)}
+            {logos.map((l) => <img key={l.alt} src={l.src} alt={l.alt} width={l.w} height={l.h} className="h-10 w-auto object-contain md:h-12" loading="lazy" decoding="async" />)}
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-sm opacity-75">Cadastrados no <strong>CAS do Sicredi</strong>: mais de 100 cooperativas podem nos contratar de imediato.</p>
         </div>
@@ -228,8 +233,8 @@ function Landing() {
         </div>
         <div className="mt-12 rounded-2xl border border-primary/30 bg-hero bg-card p-8 md:flex md:items-center md:justify-between md:gap-8">
           <div>
-            <h3 className="text-2xl font-bold">Plataforma SALT: cobrança digital 2x mais eficiente</h3>
-            <p className="mt-2 max-w-2xl text-muted-foreground">Negociação automatizada com IA no WhatsApp, SMS e web, navegação 3G/4G patrocinada e boleto emitido na hora. Mais recuperação sem aumentar custos.</p>
+            <h3 className="text-2xl font-bold">Plataforma SALT: cobrança digital com inteligência artificial</h3>
+            <p className="mt-2 max-w-2xl text-muted-foreground">Negociação automatizada com IA no WhatsApp, SMS e web, navegação 3G/4G patrocinada e boleto emitido na hora, para o seu cliente negociar quando e onde preferir.</p>
           </div>
           <a href="#form" className="mt-6 inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-primary-foreground hover:brightness-110 md:mt-0">Solicitar análise <ArrowRight className="size-4" /></a>
         </div>
@@ -251,7 +256,7 @@ function Landing() {
         <div className="mt-8 divide-y divide-border rounded-xl border border-border bg-surface">
           {faqs.map((f, i) => (
             <div key={f.q}>
-              <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-4 p-5 text-left font-semibold">
+              <button onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i} className="flex w-full items-center justify-between gap-4 p-5 text-left font-semibold">
                 {f.q}<ChevronDown className={`size-5 shrink-0 text-primary transition ${open === i ? "rotate-180" : ""}`} />
               </button>
               {open === i && <p className="px-5 pb-5 text-sm text-muted-foreground">{f.a}</p>}
@@ -271,9 +276,7 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-border py-8 pb-24 text-center text-xs text-muted-foreground md:pb-8">
-        © {new Date().getFullYear()} Assertiva Multicanalidade · Recuperação de Crédito · <a href="https://assertivarc.com.br" className="underline">assertivarc.com.br</a>
-      </footer>
+      <SiteFooter />
 
       {/* Mobile sticky CTA */}
       <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
