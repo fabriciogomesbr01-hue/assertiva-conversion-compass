@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Check, MessageCircle } from "lucide-react";
 
 import { SimplePage } from "@/components/site/SimplePage";
-import { LEAD_KEY, track, waLink, type Lead } from "@/lib/company";
+import { LEAD_KEY, LEADS_WHATSAPP, track, waLink, type Lead } from "@/lib/company";
 
 const DEFAULT_MSG = "Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.";
 
@@ -51,7 +51,7 @@ function ThanksPage() {
         <p className="mt-2">Um especialista da Assertiva vai entrar em contato em até 1 dia útil.</p>
         <p className="mt-6 font-semibold text-foreground">Quer agilizar? Fale agora com a gente pelo WhatsApp:</p>
         <a
-          href={waLink(lead?.msg || DEFAULT_MSG)}
+          href={waLink(lead?.msg || DEFAULT_MSG, LEADS_WHATSAPP)}
           target="_blank"
           rel="noreferrer"
           onClick={() => track("whatsapp_click", { location: "obrigado" })}

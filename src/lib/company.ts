@@ -24,8 +24,11 @@ export const SITE_URL = "https://lp.assertivarc.com.br";
 export const GTM_ID = "";
 
 export const telHref = (phone: string) => `tel:+55${phone.replace(/\D/g, "")}`;
-export const waLink = (msg: string) =>
-  `https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(msg)}`;
+// WhatsApp do comercial que recebe os leads no botão da página /obrigado.
+export const LEADS_WHATSAPP = "5527997029114";
+
+export const waLink = (msg: string, number = COMPANY.whatsapp) =>
+  `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
 
 export function track(event: string, params: Record<string, unknown> = {}) {
   const w = window as unknown as { dataLayer?: unknown[] };
