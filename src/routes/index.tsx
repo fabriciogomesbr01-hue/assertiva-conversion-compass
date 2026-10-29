@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { COMPANY, LEAD_KEY, SITE_URL, sendLead, track } from "@/lib/company";
+import { COMPANY, LEAD_KEY, SITE_URL, sendLead, type Lead } from "@/lib/company";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -92,11 +92,18 @@ function LeadForm({ id }: { id?: string }) {
       setStatus("error");
       return;
     }
-    track("generate_lead", { segmento: f.get("segmento"), volume: f.get("volume") });
+    // O evento de conversão (generate_lead) é disparado pela página /obrigado, a partir destes dados.
+    const lead: Lead = {
+      nome: String(f.get("nome") || "").split(" ")[0],
+      segmento: String(f.get("segmento")),
+      volume: String(f.get("volume")),
+      msg: `Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nTelefone: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nValor em atraso: ${f.get("volume")}`,
+      tracked: false,
+    };
     try {
-      sessionStorage.setItem(LEAD_KEY, String(f.get("nome") || "").split(" ")[0]);
+      sessionStorage.setItem(LEAD_KEY, JSON.stringify(lead));
     } catch {
-      // Sem sessionStorage: a página de obrigado não mostra o nome.
+      // Sem sessionStorage: a página de obrigado não consegue confirmar o envio nem disparar a conversão.
     }
     navigate({ to: "/obrigado" });
   };
