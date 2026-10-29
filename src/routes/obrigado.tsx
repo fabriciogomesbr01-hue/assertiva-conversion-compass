@@ -32,7 +32,12 @@ function ThanksPage() {
     }
     if (!saved) return; // Acesso direto ao /obrigado: não conta conversão.
     if (!saved.tracked) {
-      track("generate_lead", { segmento: saved.segmento, volume: saved.volume });
+      track("generate_lead", {
+        lead_id: saved.id,
+        segmento: saved.segmento,
+        volume: saved.volume,
+        user_data: saved.phone ? { phone_number: saved.phone } : undefined,
+      });
       saved = { ...saved, tracked: true };
       try {
         sessionStorage.setItem(LEAD_KEY, JSON.stringify(saved));

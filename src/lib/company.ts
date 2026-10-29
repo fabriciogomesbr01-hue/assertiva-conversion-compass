@@ -90,4 +90,24 @@ export async function sendLead(fields: Record<string, string>) {
 
 // Dados que o formulário deixa no sessionStorage para a página /obrigado.
 // "tracked" evita contar a conversão de novo se a pessoa recarregar a página.
-export type Lead = { nome: string; segmento: string; volume: string; msg: string; tracked: boolean };
+// "id" vai como ID da transação na conversão do Google Ads (evita duplicidade) e "phone" (E.164)
+// alimenta as conversões otimizadas.
+export type Lead = {
+  id: string;
+  nome: string;
+  segmento: string;
+  volume: string;
+  phone: string;
+  msg: string;
+  tracked: boolean;
+};
+
+// Telefone no formato E.164 (+55DDDNÚMERO), exigido pelas conversões otimizadas do Google Ads.
+export function toE164(raw: string) {
+  const digits = raw.replace(/\D/g, "").replace(/^0+/, "");
+  if (!digits) return "";
+  return `+${digits.startsWith("55") && digits.length >= 12 ? digits : `55${digits}`}`;
+}
+
+export const newLeadId = () =>
+  `lead-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;

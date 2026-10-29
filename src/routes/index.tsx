@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { COMPANY, LEAD_KEY, LEADS_WHATSAPP, SITE_URL, sendLead, track, waLink, type Lead } from "@/lib/company";
+import { COMPANY, LEAD_KEY, LEADS_WHATSAPP, SITE_URL, newLeadId, sendLead, toE164, track, waLink, type Lead } from "@/lib/company";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -120,9 +120,11 @@ function LeadForm({ id }: { id?: string }) {
     }
     // O evento de conversão (generate_lead) é disparado pela página /obrigado, a partir destes dados.
     const lead: Lead = {
+      id: newLeadId(),
       nome: String(f.get("nome") || "").split(" ")[0] ?? "",
       segmento: String(f.get("segmento")),
       volume: String(f.get("volume")),
+      phone: toE164(String(f.get("telefone") || "")),
       msg,
       tracked: false,
     };
