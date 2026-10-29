@@ -2,7 +2,13 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   ArrowRight,
+  BadgePercent,
   Check,
+  FileCheck,
+  Handshake,
+  Lock,
+  TrendingUp,
+  UserCheck,
   ChevronDown,
   Clock,
   FileText,
@@ -66,8 +72,17 @@ const steps = [
 
 const segments = ["Cooperativas e bancos", "Seguros e consórcio", "Consignado", "Cartões", "Varejo e maquinário", "Imobiliário, IPTU e IPVA", "Pesados e agrícola"];
 
+const lgpd = [
+  { icon: FileCheck, t: "Finalidade definida", d: "Os dados da sua carteira são usados apenas para a cobrança contratada, nada além disso." },
+  { icon: Lock, t: "Segurança da informação", d: "Acesso restrito à equipe responsável e armazenamento protegido." },
+  { icon: UserCheck, t: "Respeito ao devedor", d: "Abordagem transparente, sem constrangimento ou exposição, como prevê o Código de Defesa do Consumidor." },
+  { icon: Scale, t: "Conformidade com a lei", d: "Processos de cobrança alinhados à LGPD (Lei nº 13.709/2018) em todos os canais." },
+];
+
 const faqs = [
+  { q: "Como a Assertiva é remunerada?", a: "Por êxito. Nossa remuneração é calculada sobre a carteira efetivamente recuperada, ou seja, só ganhamos quando você recebe." },
   { q: "Como funciona a terceirização da cobrança?", a: "Recebemos sua carteira, fazemos o diagnóstico e assumimos toda a régua de cobrança extrajudicial, com relatórios de cada ação e repasse dos valores recuperados." },
+  { q: "Vocês trabalham dentro da LGPD?", a: "Sim. Atuamos exclusivamente dentro da LGPD: os dados são usados só para a finalidade da cobrança, com acesso restrito, armazenamento seguro e abordagem respeitosa ao devedor." },
   { q: "A cobrança prejudica o relacionamento com meus clientes?", a: "Não. Somos especialistas em cobrança humanizada: abordagem respeitosa, transparente e alinhada à sua política comercial e à LGPD." },
   { q: "Atendem cooperativas de crédito?", a: "Sim. Estamos cadastrados no CAS do Sicredi, o que permite que mais de 100 cooperativas nos contratem de imediato, e atuamos há mais de 6 anos com cooperativas." },
   { q: "Vocês atuam em todo o Brasil?", a: "Sim. Operação digital nacional e equipe de visita externa fidelizada em todo o território." },
@@ -211,7 +226,7 @@ function Landing() {
           </div>
           <div className="lg:self-start">
             <ul className="grid gap-2 text-sm sm:grid-cols-2 lg:mt-6">
-              {["Cobrança extrajudicial e judicial", "Robô de negociação 24/7", "Visita externa em todo o Brasil", "Relatórios e BI em tempo real"].map((b) => (
+              {["Remuneração por êxito", "100% dentro da LGPD", "Cobrança extrajudicial e judicial", "Robô de negociação 24/7", "Visita externa em todo o Brasil", "Relatórios e BI em tempo real"].map((b) => (
                 <li key={b} className="flex items-center gap-2"><Check className="size-4 shrink-0 text-primary" />{b}</li>
               ))}
             </ul>
@@ -238,6 +253,30 @@ function Landing() {
         </div>
       </section>
 
+      {/* Success fee */}
+      <section className="mx-auto max-w-6xl px-5 pt-20">
+        <div className="relative overflow-hidden rounded-2xl border border-primary/40 bg-card bg-hero p-8 shadow-glow sm:p-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
+            <div>
+              <p className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary"><Handshake className="size-4" /> Remuneração por êxito</p>
+              <h2 className="mt-3 text-3xl font-bold sm:text-4xl">Só ganhamos quando <span className="text-gradient">você ganha</span></h2>
+              <p className="mt-4 max-w-xl text-muted-foreground">Trabalhamos por êxito: nossa remuneração é calculada sobre a carteira efetivamente recuperada. Nosso interesse é o mesmo que o seu, recuperar o máximo possível.</p>
+            </div>
+            <ul className="grid gap-3">
+              {[
+                { i: BadgePercent, t: "Remuneração sobre o valor efetivamente recuperado" },
+                { i: TrendingUp, t: "Interesses alinhados: quanto mais você recebe, melhor para os dois" },
+                { i: Handshake, t: "Parceria de longo prazo, com relatórios de cada ação" },
+              ].map(({ i: I, t }) => (
+                <li key={t} className="flex items-start gap-3 rounded-xl border border-border bg-background/40 p-4 text-sm">
+                  <I className="mt-0.5 size-5 shrink-0 text-primary" />{t}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Problem */}
       <section className="mx-auto max-w-6xl px-5 py-20">
         <h2 className="max-w-3xl text-3xl font-bold sm:text-4xl">Inadimplência parada é dinheiro que <span className="text-gradient">sua empresa deixa de ter</span></h2>
@@ -257,7 +296,7 @@ function Landing() {
       </section>
 
       {/* Services */}
-      <section className="border-y border-border bg-surface py-20">
+      <section id="servicos" className="scroll-mt-20 border-y border-border bg-surface py-20">
         <div className="mx-auto max-w-6xl px-5">
           <p className="text-sm font-bold uppercase tracking-wider text-primary">Serviços de cobrança</p>
           <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Uma assessoria completa, do contato ao pagamento</h2>
@@ -274,7 +313,7 @@ function Landing() {
       </section>
 
       {/* Steps */}
-      <section className="mx-auto max-w-6xl px-5 py-20">
+      <section id="como-funciona" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-20">
         <h2 className="text-3xl font-bold sm:text-4xl">Como recuperamos seu crédito</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-4">
           {steps.map((s, i) => (
@@ -294,6 +333,24 @@ function Landing() {
         </div>
       </section>
 
+      {/* LGPD */}
+      <section id="lgpd" className="scroll-mt-20 border-t border-border bg-surface py-20">
+        <div className="mx-auto max-w-6xl px-5">
+          <p className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary"><ShieldCheck className="size-4" /> Proteção de dados</p>
+          <h2 className="mt-2 max-w-3xl text-3xl font-bold sm:text-4xl">Cobrança feita exclusivamente <span className="text-gradient">dentro da LGPD</span></h2>
+          <p className="mt-4 max-w-2xl text-muted-foreground">Os dados dos seus clientes são tratados com responsabilidade em todas as etapas. Recuperar crédito não pode colocar a sua empresa em risco.</p>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {lgpd.map(({ icon: I, t, d }) => (
+              <div key={t} className="rounded-xl border border-border bg-card p-6">
+                <div className="inline-flex rounded-lg bg-primary/15 p-2.5"><I className="size-5 text-primary" /></div>
+                <h3 className="mt-4 text-lg font-bold">{t}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Segments */}
       <section className="border-y border-border bg-surface py-16">
         <div className="mx-auto max-w-6xl px-5 text-center">
@@ -305,7 +362,7 @@ function Landing() {
       </section>
 
       {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-5 py-20">
+      <section id="faq" className="mx-auto max-w-3xl scroll-mt-20 px-5 py-20">
         <h2 className="text-center text-3xl font-bold">Perguntas frequentes</h2>
         <div className="mt-8 divide-y divide-border rounded-xl border border-border bg-surface">
           {faqs.map((f, i) => (
