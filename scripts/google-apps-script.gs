@@ -26,7 +26,7 @@ function doPost(e) {
 
     const sheet = (SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet()).getSheets()[0];
     if (sheet.getLastRow() === 0) sheet.appendRow(COLUMNS);
-    const row = COLUMNS.map((c) => (c === "Data" ? new Date() : String(data[c] || "").slice(0, 500)));
+    const row = COLUMNS.map((c) => (c === "Data" ? Utilities.formatDate(new Date(), "America/Sao_Paulo", "dd/MM/yyyy HH:mm") : String(data[c] || "").slice(0, 500)));
     sheet.appendRow(row);
 
     const html =
