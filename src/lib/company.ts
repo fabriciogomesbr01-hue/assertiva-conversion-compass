@@ -39,26 +39,52 @@ export function track(event: string, params: Record<string, unknown> = {}) {
 // Chave do sessionStorage que leva os dados do formulário até a página /obrigado.
 export const LEAD_KEY = "assertiva-lead";
 
-// Destinatários dos contatos do formulário. O envio é feito pelo FormSubmit (formsubmit.co):
-// no primeiro envio, o FormSubmit manda um e-mail de ativação para o primeiro endereço; é preciso confirmar
-// uma única vez para os contatos começarem a chegar.
+// Destinatários dos contatos do formulário.
 export const LEAD_EMAILS = ["alexandrer@assertivarc.com.br", "fabricio@assertivarc.com.br"];
 
-export async function sendLead(fields: Record<string, string>) {
+// URL do Google Apps Script que recebe os contatos (salva na planilha e envia o e-mail aos LEAD_EMAILS).
+// Código e passo a passo em scripts/google-apps-script.gs. Vazio = usa só o FormSubmit.
+export const LEAD_ENDPOINT = "";
+
+const subjectOf = (fields: Record<string, string>) =>
+  `Novo contato pela landing page: ${fields["Empresa"] || fields["Nome"]}`;
+
+async function sendViaAppsScript(fields: Record<string, string>) {
+  // text/plain evita o preflight de CORS, que o Apps Script não responde.
+  const res = await fetch(LEAD_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ ...fields, _subject: subjectOf(fields) }),
+  });
+  const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
+  if (!res.ok || !data.ok) throw new Error("Apps Script recusou o envio");
+}
+
+// Reserva: FormSubmit (formsubmit.co). Só repassa depois de ativado pelo e-mail enviado ao primeiro endereço.
+async function sendViaFormSubmit(fields: Record<string, string>) {
   const [to, ...cc] = LEAD_EMAILS;
   const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({
-      ...fields,
-      _subject: `Novo contato pela landing page: ${fields["Empresa"] || fields["Nome"]}`,
-      _cc: cc.join(","),
-      _template: "table",
-      _captcha: "false",
-    }),
+    body: JSON.stringify({ ...fields, _subject: subjectOf(fields), _cc: cc.join(","), _template: "table", _captcha: "false" }),
   });
   const data = (await res.json().catch(() => ({}))) as { success?: string | boolean };
-  if (!res.ok || String(data.success) === "false") throw new Error("Falha ao enviar o formulário");
+  if (!res.ok || String(data.success) !== "true") throw new Error("FormSubmit recusou o envio");
+}
+
+// Tenta cada serviço em ordem; só falha se todos falharem (o formulário então oferece o WhatsApp).
+export async function sendLead(fields: Record<string, string>) {
+  const senders = LEAD_ENDPOINT ? [sendViaAppsScript, sendViaFormSubmit] : [sendViaFormSubmit];
+  let lastError: unknown;
+  for (const send of senders) {
+    try {
+      await send(fields);
+      return;
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError;
 }
 
 // Dados que o formulário deixa no sessionStorage para a página /obrigado.

@@ -8,6 +8,7 @@ import {
   FileText,
   Headphones,
   MapPin,
+  MessageCircle,
   Scale,
   ShieldCheck,
   Sparkles,
@@ -16,7 +17,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { COMPANY, LEAD_KEY, SITE_URL, sendLead, type Lead } from "@/lib/company";
+import { COMPANY, LEAD_KEY, LEADS_WHATSAPP, SITE_URL, sendLead, track, waLink, type Lead } from "@/lib/company";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -75,11 +76,17 @@ const faqs = [
 function LeadForm({ id }: { id?: string }) {
   const navigate = useNavigate();
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
+  const [fallbackMsg, setFallbackMsg] = useState("");
+  // Antes do JavaScript carregar, o navegador enviaria o formulário "cru" (dados na URL, nada enviado).
+  // O botão só é liberado quando o envio por JavaScript está pronto.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     if (f.get("_honey")) return; // Campo invisível preenchido: robô de spam.
     setStatus("sending");
+    const msg = `Olá! Quero uma análise gratuita da minha carteira.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nTelefone: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nValor em atraso: ${f.get("volume")}`;
     try {
       await sendLead({
         Nome: String(f.get("nome")),
@@ -90,7 +97,10 @@ function LeadForm({ id }: { id?: string }) {
         Origem: window.location.href,
       });
     } catch {
+      // Nenhum serviço de envio respondeu: oferece o WhatsApp com os dados, para o contato não se perder.
+      setFallbackMsg(msg);
       setStatus("error");
+      track("form_error");
       return;
     }
     // O evento de conversão (generate_lead) é disparado pela página /obrigado, a partir destes dados.
@@ -98,7 +108,7 @@ function LeadForm({ id }: { id?: string }) {
       nome: String(f.get("nome") || "").split(" ")[0] ?? "",
       segmento: String(f.get("segmento")),
       volume: String(f.get("volume")),
-      msg: `Olá! Acabei de pedir uma análise gratuita da minha carteira pelo site.\nNome: ${f.get("nome")}\nEmpresa: ${f.get("empresa")}\nTelefone: ${f.get("telefone")}\nSegmento: ${f.get("segmento")}\nValor em atraso: ${f.get("volume")}`,
+      msg,
       tracked: false,
     };
     try {
@@ -110,7 +120,7 @@ function LeadForm({ id }: { id?: string }) {
   };
   const field = "w-full rounded-lg border border-input bg-background/60 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-ring/30";
   return (
-    <form id={id} onSubmit={onSubmit} className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 shadow-glow sm:p-8">
+    <form id={id} onSubmit={onSubmit} method="post" action="#form" className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 shadow-glow sm:p-8">
       <h2 className="text-2xl font-bold">Análise gratuita da sua carteira</h2>
       <p className="mt-1 text-sm text-muted-foreground">Sem custo e sem compromisso. Resposta de um especialista em até 1 dia útil.</p>
       <div className="mt-6 grid gap-3">
@@ -135,13 +145,17 @@ function LeadForm({ id }: { id?: string }) {
           <option>R$ 500 mil a R$ 2 milhões</option>
           <option>Acima de R$ 2 milhões</option>
         </select>
-        <button type="submit" disabled={status === "sending"} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-display text-base font-bold text-primary-foreground transition hover:brightness-110 disabled:cursor-wait disabled:opacity-70">
+        <button type="submit" disabled={!ready || status === "sending"} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-display text-base font-bold text-primary-foreground transition hover:brightness-110 disabled:cursor-wait disabled:opacity-70">
           {status === "sending" ? "Enviando..." : <>Quero recuperar meu crédito <ArrowRight className="size-5" /></>}
         </button>
         {status === "error" && (
-          <p role="alert" className="text-sm text-destructive">
-            Não foi possível enviar agora. Tente novamente ou ligue para {COMPANY.phones[0]}.
-          </p>
+          <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm">
+            <p className="text-foreground">Não conseguimos enviar pelo formulário agora. Envie seus dados pelo WhatsApp que respondemos por lá:</p>
+            <a href={waLink(fallbackMsg, LEADS_WHATSAPP)} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click", { location: "form_error" })}
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground hover:brightness-110">
+              <MessageCircle className="size-5" /> Enviar pelo WhatsApp
+            </a>
+          </div>
         )}
       </div>
       <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
