@@ -14,6 +14,8 @@
  * para manter a mesma URL.
  */
 
+// ID da planilha de leads (o trecho entre /d/ e /edit na URL). Vazio = planilha onde o script foi criado.
+const SHEET_ID = "13vCB0fnNT9cuBczTzJz2TvZkHL3KgpdynDCb_uqFgf0";
 const RECIPIENTS = ["alexandrer@assertivarc.com.br", "fabricio@assertivarc.com.br"];
 const COLUMNS = ["Data", "Nome", "Empresa", "Telefone", "Segmento", "Valor em atraso", "Origem"];
 
@@ -22,7 +24,7 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     if (!data.Nome || !data.Telefone) return reply({ ok: false, error: "campos obrigatórios" });
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    const sheet = (SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet()).getSheets()[0];
     if (sheet.getLastRow() === 0) sheet.appendRow(COLUMNS);
     const row = COLUMNS.map((c) => (c === "Data" ? new Date() : String(data[c] || "").slice(0, 500)));
     sheet.appendRow(row);
@@ -44,6 +46,12 @@ function doPost(e) {
   } catch (err) {
     return reply({ ok: false, error: String(err) });
   }
+}
+
+// Roda uma vez pelo editor para o Google pedir as autorizações (planilha e e-mail).
+function autorizar() {
+  SpreadsheetApp.openById(SHEET_ID).getName();
+  MailApp.getRemainingDailyQuota();
 }
 
 function escapeHtml(v) {

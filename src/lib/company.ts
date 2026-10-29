@@ -44,7 +44,8 @@ export const LEAD_EMAILS = ["alexandrer@assertivarc.com.br", "fabricio@assertiva
 
 // URL do Google Apps Script que recebe os contatos (salva na planilha e envia o e-mail aos LEAD_EMAILS).
 // Código e passo a passo em scripts/google-apps-script.gs. Vazio = usa só o FormSubmit.
-export const LEAD_ENDPOINT = "";
+export const LEAD_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbxWL43ZcyP01dYFKVrMXBrduTZk1OhcKLQuSgmlsurcE8AJ0H1523kg39IoOsBBUllqow/exec";
 
 const subjectOf = (fields: Record<string, string>) =>
   `Novo contato pela landing page: ${fields["Empresa"] || fields["Nome"]}`;
