@@ -6,8 +6,9 @@ export const COMPANY = {
   cnpj: "", // Ex.: "00.000.000/0001-00". Preencha para exibir no rodapé.
   address: "Espírito Santo, Brasil",
   phones: ["(27) 2142-1092", "(27) 2142-1107"],
-  whatsapp: "5527996062121",
-  whatsappLabel: "(27) 99606-2121",
+  // WhatsApp do comercial: usado em todos os botões, no rodapé e nas páginas legais.
+  whatsapp: "5527997029114",
+  whatsappLabel: "(27) 99702-9114",
   email: "", // Ex.: "contato@assertivarc.com.br". Preencha para exibir no rodapé e nas políticas.
   instagram: "https://www.instagram.com/assertiva_recuperacaodecredito/",
   website: "https://assertivarc.com.br",
@@ -25,8 +26,8 @@ export const GTM_ID = "GTM-KG6C63QG";
 
 export const telHref = (phone: string) => `tel:+55${phone.replace(/\D/g, "")}`;
 // WhatsApp do comercial que recebe os leads no botão da página /obrigado.
-export const LEADS_WHATSAPP = "5527997029114";
-export const LEADS_WHATSAPP_LABEL = "(27) 99702-9114";
+export const LEADS_WHATSAPP = COMPANY.whatsapp;
+export const LEADS_WHATSAPP_LABEL = COMPANY.whatsappLabel;
 export const LEADS_WHATSAPP_MSG = "Olá! Vim pelo site da Assertiva e quero saber mais sobre a cobrança extrajudicial.";
 
 export const waLink = (msg: string, number = COMPANY.whatsapp) =>
