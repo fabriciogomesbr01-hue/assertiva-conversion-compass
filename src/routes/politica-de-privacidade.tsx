@@ -53,7 +53,7 @@ function PrivacyPage() {
       <h2>4. Compartilhamento</h2>
       <p>
         Não vendemos seus dados. Eles podem ser compartilhados apenas com fornecedores que nos ajudam a operar (hospedagem, envio de formulários por
-        e-mail, como o FormSubmit, e plataformas de publicidade e análise) ou com autoridades, quando exigido por lei.
+        e-mail, como o Google e o FormSubmit, e plataformas de publicidade e análise) ou com autoridades, quando exigido por lei.
       </p>
 
       <h2>5. Armazenamento e segurança</h2>

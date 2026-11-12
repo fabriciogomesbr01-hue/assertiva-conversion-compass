@@ -26,6 +26,8 @@ export const GTM_ID = "GTM-KG6C63QG";
 export const telHref = (phone: string) => `tel:+55${phone.replace(/\D/g, "")}`;
 // WhatsApp do comercial que recebe os leads no botão da página /obrigado.
 export const LEADS_WHATSAPP = "5527997029114";
+export const LEADS_WHATSAPP_LABEL = "(27) 99702-9114";
+export const LEADS_WHATSAPP_MSG = "Olá! Vim pelo site da Assertiva e quero saber mais sobre a cobrança extrajudicial.";
 
 export const waLink = (msg: string, number = COMPANY.whatsapp) =>
   `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;

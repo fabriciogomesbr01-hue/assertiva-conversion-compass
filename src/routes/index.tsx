@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { WhatsAppFloat, WhatsAppLink, waButton } from "@/components/site/WhatsAppButton";
 import { COMPANY, LEAD_KEY, LEADS_WHATSAPP, SITE_URL, newLeadId, sendLead, toE164, track, waLink, type Lead } from "@/lib/company";
 
 export const Route = createFileRoute("/")({
@@ -203,7 +204,12 @@ function Landing() {
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
           <img src="/logos/logo-assertiva.png" alt={COMPANY.name} width={237} height={120} fetchPriority="high" className="h-14 w-auto" />
-          <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
+          <div className="flex items-center gap-2">
+            <WhatsAppLink location="topo" className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold sm:px-4 ${waButton}`}>
+              <MessageCircle className="size-5" /><span className="hidden sm:inline">WhatsApp</span><span className="sr-only sm:hidden">Falar no WhatsApp</span>
+            </WhatsAppLink>
+            <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
+          </div>
         </div>
       </header>
 
@@ -225,6 +231,9 @@ function Landing() {
           </div>
           <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
             <LeadForm id="form" />
+            <WhatsAppLink location="abaixo_formulario" className={`mt-3 flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-bold ${waButton}`}>
+              <MessageCircle className="size-5" /><span className="sm:hidden">Prefere falar agora? WhatsApp</span><span className="hidden sm:inline">Prefere conversar agora? Chame no WhatsApp</span>
+            </WhatsAppLink>
           </div>
           <div className="lg:self-start">
             <ul className="grid gap-2 text-sm sm:grid-cols-2 lg:mt-6">
@@ -393,8 +402,14 @@ function Landing() {
 
       {/* Mobile sticky CTA */}
       <div className={`fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform md:hidden ${formVisible ? "translate-y-full" : ""}`} aria-hidden={formVisible}>
-        <a href="#form" className="block rounded-lg bg-primary py-3 text-center text-sm font-bold text-primary-foreground">Quero minha análise gratuita</a>
+        <div className="grid grid-cols-2 gap-2">
+          <a href="#form" className="rounded-lg bg-primary py-3 text-center text-sm font-bold text-primary-foreground">Análise gratuita</a>
+          <WhatsAppLink location="barra_celular" className={`flex items-center justify-center gap-1.5 rounded-lg py-3 text-sm font-bold ${waButton}`}>
+            <MessageCircle className="size-4" /> WhatsApp
+          </WhatsAppLink>
+        </div>
       </div>
+      <WhatsAppFloat hidden={formVisible} />
     </main>
   );
 }
