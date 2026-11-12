@@ -26,23 +26,52 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { WhatsAppFloat, WhatsAppLink, waButton } from "@/components/site/WhatsAppButton";
 import { COMPANY, LEAD_KEY, LEADS_WHATSAPP, SITE_URL, newLeadId, sendLead, toE164, track, waLink, type Lead } from "@/lib/company";
 
+// Palavras-chave da campanha do Google Ads desta página:
+// "empresa de cobrança terceirizada", "empresa de cobrança extrajudicial", "serviço de cobrança extrajudicial".
+const TITLE = "Empresa de Cobrança Extrajudicial Terceirizada | Assertiva";
+const DESCRIPTION =
+  "Serviço de cobrança extrajudicial terceirizado para empresas, bancos e cooperativas. Cobrança humanizada, 100% LGPD e remuneração por êxito.";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Empresa de Cobrança e Recuperação de Crédito | Assertiva" },
-      {
-        name: "description",
-        content:
-          "Assessoria de cobrança extrajudicial com mais de 20 anos de mercado, IA e base com 250 milhões de dados. Terceirize a cobrança da sua empresa. Análise gratuita.",
-      },
-      { property: "og:title", content: "Assertiva | Empresa de Cobrança e Recuperação de Crédito" },
-      {
-        property: "og:description",
-        content: "Cobrança extrajudicial humanizada e multicanal para bancos, cooperativas e empresas. Solicite uma análise gratuita da sua carteira.",
-      },
-      { property: "og:url", content: SITE_URL },
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:url", content: `${SITE_URL}/` },
     ],
-    links: [{ rel: "canonical", href: SITE_URL }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Service",
+              name: "Serviço de cobrança extrajudicial terceirizada",
+              serviceType: "Cobrança extrajudicial",
+              description: DESCRIPTION,
+              url: `${SITE_URL}/`,
+              areaServed: { "@type": "Country", name: "Brasil" },
+              audience: { "@type": "BusinessAudience", name: "Empresas, bancos e cooperativas" },
+              provider: {
+                "@type": "ProfessionalService",
+                name: "Assertiva Recuperação de Crédito",
+                url: COMPANY.website,
+                telephone: `+55 ${COMPANY.phones[0]}`,
+                address: { "@type": "PostalAddress", addressRegion: "ES", addressCountry: "BR" },
+              },
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+            },
+          ],
+        }),
+      },
+    ],
   }),
   component: Landing,
 });
@@ -82,6 +111,9 @@ const lgpd = [
 
 const faqs = [
   { q: "Como a Assertiva é remunerada?", a: "Por êxito. Nossa remuneração é calculada sobre a carteira efetivamente recuperada, ou seja, só ganhamos quando você recebe." },
+  { q: "O que faz uma empresa de cobrança terceirizada?", a: "Assume a cobrança da sua carteira de inadimplentes no lugar da sua equipe: localiza os devedores, negocia por vários canais, acompanha cada acordo até o pagamento e repassa os valores recuperados, com relatórios de todas as ações." },
+  { q: "Como funciona o serviço de cobrança extrajudicial?", a: "É a cobrança feita sem processo judicial. Recebemos sua carteira, fazemos o diagnóstico e aplicamos uma régua de contato por WhatsApp, SMS, e-mail, telefone e visita externa, oferecendo condições de acordo para cada perfil de devedor." },
+  { q: "Por que contratar uma empresa de cobrança extrajudicial em vez de ir direto para a Justiça?", a: "A cobrança extrajudicial é mais rápida e mais barata, preserva o relacionamento com o cliente e resolve a maior parte dos casos. A via judicial fica para quando a negociação não avança, de forma escalonada." },
   { q: "Como funciona a terceirização da cobrança?", a: "Recebemos sua carteira, fazemos o diagnóstico e assumimos toda a régua de cobrança extrajudicial, com relatórios de cada ação e repasse dos valores recuperados." },
   { q: "Vocês trabalham dentro da LGPD?", a: "Sim. Atuamos exclusivamente dentro da LGPD: os dados são usados só para a finalidade da cobrança, com acesso restrito, armazenamento seguro e abordagem respeitosa ao devedor." },
   { q: "A cobrança prejudica o relacionamento com meus clientes?", a: "Não. Somos especialistas em cobrança humanizada: abordagem respeitosa, transparente e alinhada à sua política comercial e à LGPD." },
@@ -220,13 +252,13 @@ function Landing() {
         <div className="relative mx-auto grid max-w-6xl gap-x-12 gap-y-7 px-5 py-8 sm:py-14 lg:grid-cols-[1.1fr_1fr] lg:grid-rows-[auto_1fr] lg:gap-y-0 lg:py-20">
           <div className="lg:self-end">
             <p className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary sm:text-xs">
-              <Sparkles className="size-3.5" /> Empresa de cobrança · 20+ anos
+              <Sparkles className="size-3.5" /> Cobrança extrajudicial · 20+ anos
             </p>
-            <h1 className="mt-4 text-[2rem] font-extrabold leading-[1.08] sm:mt-5 sm:text-5xl lg:text-6xl">
-              Terceirize sua cobrança e <span className="text-gradient">recupere mais crédito</span>
+            <h1 className="mt-4 text-[2rem] font-extrabold leading-[1.08] sm:mt-5 sm:text-5xl lg:text-[3.4rem]">
+              Empresa de cobrança extrajudicial terceirizada <span className="text-gradient">para recuperar mais crédito</span>
             </h1>
             <p className="mt-4 max-w-xl text-base text-muted-foreground sm:mt-5 sm:text-lg">
-              Assessoria de cobrança extrajudicial humanizada e multicanal, com inteligência artificial e mais de 250 milhões de dados para localizar e negociar com seus inadimplentes.
+              Serviço de cobrança extrajudicial humanizado e multicanal, com inteligência artificial e mais de 250 milhões de dados para localizar e negociar com seus inadimplentes. Remuneração por êxito.
             </p>
           </div>
           <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
@@ -265,7 +297,7 @@ function Landing() {
       </section>
 
       {/* Success fee */}
-      <section className="mx-auto max-w-6xl px-5 pt-20">
+      <section id="exito" className="mx-auto max-w-6xl scroll-mt-20 px-5 pt-20">
         <div className="relative overflow-hidden rounded-2xl border border-primary/40 bg-card bg-hero p-8 shadow-glow sm:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
             <div>
@@ -306,11 +338,43 @@ function Landing() {
         </div>
       </section>
 
+      {/* Por que terceirizar */}
+      <section id="por-que-terceirizar" className="scroll-mt-20 border-t border-border py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-wider text-primary">Cobrança terceirizada</p>
+            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Por que contratar uma <span className="text-gradient">empresa de cobrança terceirizada</span></h2>
+            <div className="mt-5 space-y-4 text-muted-foreground">
+              <p>
+                Uma empresa de cobrança extrajudicial assume a recuperação da sua carteira de inadimplentes sem processo judicial: localiza os
+                devedores, negocia por vários canais e acompanha cada acordo até o pagamento. Sua equipe volta a focar no negócio, e a
+                cobrança ganha escala, dados e uma régua estruturada.
+              </p>
+              <p>
+                O serviço de cobrança extrajudicial da Assertiva une mais de 20 anos de experiência, tecnologia própria e abordagem
+                humanizada, sempre dentro da LGPD e do Código de Defesa do Consumidor. E, como a remuneração é por êxito, nosso resultado
+                depende do quanto você recebe.
+              </p>
+            </div>
+          </div>
+          <ul className="grid gap-3 self-center">
+            {[
+              "Mais agilidade: a cobrança extrajudicial resolve a maior parte dos casos sem esperar a Justiça",
+              "Menos custo fixo: sem montar e treinar uma equipe interna de cobrança",
+              "Mais recuperação: dados, inteligência artificial e régua multicanal para cada perfil de devedor",
+              "Relacionamento preservado: cobrança respeitosa, que mantém o cliente da sua empresa",
+            ].map((t) => (
+              <li key={t} className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4 text-sm"><Check className="mt-0.5 size-5 shrink-0 text-primary" />{t}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* Services */}
       <section id="servicos" className="scroll-mt-20 border-y border-border bg-surface py-20">
         <div className="mx-auto max-w-6xl px-5">
           <p className="text-sm font-bold uppercase tracking-wider text-primary">Serviços de cobrança</p>
-          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Uma assessoria completa, do contato ao pagamento</h2>
+          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Serviço de cobrança extrajudicial completo, <span className="text-gradient">do contato ao pagamento</span></h2>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {services.map(({ icon: I, t, d }) => (
               <div key={t} className="rounded-xl border border-border bg-card p-6 transition hover:border-primary/50">
@@ -325,7 +389,7 @@ function Landing() {
 
       {/* Steps */}
       <section id="como-funciona" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-20">
-        <h2 className="text-3xl font-bold sm:text-4xl">Como recuperamos seu crédito</h2>
+        <h2 className="text-3xl font-bold sm:text-4xl">Como funciona a cobrança extrajudicial <span className="text-gradient">na Assertiva</span></h2>
         <div className="mt-10 grid gap-6 md:grid-cols-4">
           {steps.map((s, i) => (
             <div key={s.t}>
@@ -363,9 +427,9 @@ function Landing() {
       </section>
 
       {/* Segments */}
-      <section className="border-y border-border bg-surface py-16">
+      <section id="segmentos" className="scroll-mt-20 border-y border-border bg-surface py-16">
         <div className="mx-auto max-w-6xl px-5 text-center">
-          <h2 className="text-2xl font-bold sm:text-3xl">Segmentos atendidos</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">Segmentos atendidos pela nossa empresa de cobrança</h2>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {segments.map((s) => <span key={s} className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium">{s}</span>)}
           </div>
@@ -378,10 +442,13 @@ function Landing() {
         <div className="mt-8 divide-y divide-border rounded-xl border border-border bg-surface">
           {faqs.map((f, i) => (
             <div key={f.q}>
-              <button onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i} className="flex w-full items-center justify-between gap-4 p-5 text-left font-semibold">
-                {f.q}<ChevronDown className={`size-5 shrink-0 text-primary transition ${open === i ? "rotate-180" : ""}`} />
-              </button>
-              {open === i && <p className="px-5 pb-5 text-sm text-muted-foreground">{f.a}</p>}
+              <h3>
+                <button onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i} className="flex w-full items-center justify-between gap-4 p-5 text-left font-semibold">
+                  {f.q}<ChevronDown className={`size-5 shrink-0 text-primary transition ${open === i ? "rotate-180" : ""}`} />
+                </button>
+              </h3>
+              {/* Resposta sempre no HTML (o Google lê); só o visual é recolhido. */}
+              <p className={`px-5 pb-5 text-sm text-muted-foreground ${open === i ? "" : "hidden"}`}>{f.a}</p>
             </div>
           ))}
         </div>
