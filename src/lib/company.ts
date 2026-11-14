@@ -1,8 +1,8 @@
 // Dados institucionais exibidos no rodapé, nas páginas legais e no JSON-LD.
 // O Google Ads exige que a landing page identifique claramente quem é o anunciante.
 export const COMPANY = {
-  name: "Assertiva Multicanalidade",
-  legalName: "", // Razão social. Preencha para exibir no rodapé e nas políticas.
+  name: "Assertiva Recuperação de Crédito",
+  legalName: "Assertiva Multicanalidade", // Razão social. Preencha para exibir no rodapé e nas políticas.
   cnpj: "", // Ex.: "00.000.000/0001-00". Preencha para exibir no rodapé.
   address: "Espírito Santo, Brasil",
   phones: ["(27) 2142-1092", "(27) 2142-1107"],
