@@ -235,7 +235,7 @@ function Landing() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-          <img src="/logos/logo-assertiva.png" alt={COMPANY.name} width={237} height={120} fetchPriority="high" className="h-14 w-auto" />
+          <img src="/logos/logo-assertiva-rc.png" alt={COMPANY.name} width={1019} height={240} fetchPriority="high" className="h-14 w-auto" />
           <div className="flex items-center gap-2">
             <WhatsAppLink location="topo" className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold sm:px-4 ${waButton}`}>
               <MessageCircle className="size-5" /><span className="hidden sm:inline">WhatsApp</span><span className="sr-only sm:hidden">Falar no WhatsApp</span>
