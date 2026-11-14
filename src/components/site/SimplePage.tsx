@@ -11,7 +11,7 @@ export function SimplePage({ title, updated, children }: { title: string; update
     <main className="min-h-screen">
       <header className="border-b border-border bg-background/85">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-          <Link to="/"><img src="/logos/logo-assertiva.png" alt={COMPANY.name} width={237} height={120} className="h-12 w-auto" /></Link>
+          <Link to="/"><img src="/logos/logo-assertiva-rc.png" alt={COMPANY.name} width={1019} height={240} className="h-12 w-auto" /></Link>
           <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
             <ArrowLeft className="size-4" /> Voltar ao início
           </Link>
