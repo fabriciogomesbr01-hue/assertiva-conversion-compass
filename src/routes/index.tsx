@@ -221,8 +221,15 @@ function LeadForm({ id }: { id?: string }) {
 
 function Landing() {
   const [open, setOpen] = useState<number | null>(0);
-  // Esconde o botão fixo do celular enquanto o formulário está na tela (evita cobrir os campos).
+  // WhatsApp flutuante: aparece quando a pessoa começa a rolar e some enquanto o formulário está na tela.
   const [formVisible, setFormVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 200);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   useEffect(() => {
     const form = document.getElementById("form");
     if (!form || typeof IntersectionObserver === "undefined") return;
@@ -231,16 +238,14 @@ function Landing() {
     return () => io.disconnect();
   }, []);
   return (
-    <main className="overflow-x-hidden pb-20 md:pb-0">
+    <main className="overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
           <img src="/logos/logo-assertiva-rc.png" alt={COMPANY.name} width={1019} height={240} fetchPriority="high" className="h-14 w-auto" />
           <div className="flex items-center gap-2">
-            <WhatsAppLink location="topo" className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold sm:px-4 ${waButton}`}>
-              <MessageCircle className="size-5" /><span className="hidden sm:inline">WhatsApp</span><span className="sr-only sm:hidden">Falar no WhatsApp</span>
-            </WhatsAppLink>
-            <a href="#form" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110">Análise gratuita</a>
+            {/* No celular o formulário já aparece logo abaixo do título, então o topo fica só com o logo. */}
+            <a href="#form" className="hidden rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:brightness-110 sm:inline-block">Análise gratuita</a>
           </div>
         </div>
       </header>
@@ -467,16 +472,7 @@ function Landing() {
 
       <SiteFooter />
 
-      {/* Mobile sticky CTA */}
-      <div className={`fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform md:hidden ${formVisible ? "translate-y-full" : ""}`} aria-hidden={formVisible}>
-        <div className="grid grid-cols-2 gap-2">
-          <a href="#form" className="rounded-lg bg-primary py-3 text-center text-sm font-bold text-primary-foreground">Análise gratuita</a>
-          <WhatsAppLink location="barra_celular" className={`flex items-center justify-center gap-1.5 rounded-lg py-3 text-sm font-bold ${waButton}`}>
-            <MessageCircle className="size-4" /> WhatsApp
-          </WhatsAppLink>
-        </div>
-      </div>
-      <WhatsAppFloat hidden={formVisible} />
+      <WhatsAppFloat show={scrolled && !formVisible} />
     </main>
   );
 }
