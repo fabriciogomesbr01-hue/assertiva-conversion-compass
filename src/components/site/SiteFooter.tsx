@@ -8,7 +8,7 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-surface pb-24 pt-12 text-sm text-muted-foreground md:pb-10">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 md:grid-cols-3">
         <div>
-          <img src="/logos/logo-assertiva.png" alt={COMPANY.name} width={237} height={120} className="h-12 w-auto" loading="lazy" />
+          <img src="/logos/logo-assertiva-rc.png" alt={COMPANY.name} width={1019} height={240} className="h-12 w-auto" loading="lazy" />
           <p className="mt-3 max-w-xs">Assessoria de cobrança extrajudicial e recuperação de crédito para bancos, cooperativas e empresas.</p>
         </div>
         <div>
