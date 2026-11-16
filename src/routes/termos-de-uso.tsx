@@ -9,7 +9,7 @@ export const Route = createFileRoute("/termos-de-uso")({
       { title: "Termos de Uso | Assertiva" },
       { name: "description", content: "Termos de uso da página de serviços de cobrança e recuperação de crédito da Assertiva Multicanalidade." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/termos-de-uso` }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/termos-de-uso/` }],
   }),
   component: TermsPage,
 });

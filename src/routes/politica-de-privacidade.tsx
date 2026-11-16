@@ -9,7 +9,7 @@ export const Route = createFileRoute("/politica-de-privacidade")({
       { title: "Política de Privacidade | Assertiva" },
       { name: "description", content: "Saiba como a Assertiva Multicanalidade coleta, usa e protege seus dados pessoais, em conformidade com a LGPD." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/politica-de-privacidade` }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/politica-de-privacidade/` }],
   }),
   component: PrivacyPage,
 });
