@@ -3,7 +3,7 @@
 export const COMPANY = {
   name: "Assertiva Recuperação de Crédito",
   legalName: "Assertiva Multicanalidade", // Razão social. Preencha para exibir no rodapé e nas políticas.
-  cnpj: "", // Ex.: "00.000.000/0001-00". Preencha para exibir no rodapé.
+  cnpj: "27.988.897/0001-60", // Ex.: "00.000.000/0001-00". Preencha para exibir no rodapé.
   address: "Espírito Santo, Brasil",
   phones: ["(27) 2142-1092", "(27) 2142-1107"],
   // WhatsApp do comercial: usado em todos os botões, no rodapé e nas páginas legais.
@@ -11,6 +11,7 @@ export const COMPANY = {
   whatsappLabel: "(27) 99702-9114",
   email: "", // Ex.: "contato@assertivarc.com.br". Preencha para exibir no rodapé e nas políticas.
   instagram: "https://www.instagram.com/assertiva_recuperacaodecredito/",
+  linkedin: "https://www.linkedin.com/company/assertiva-recuperacao-de-credito/",
   website: "https://assertivarc.com.br",
 };
 
