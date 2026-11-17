@@ -105,7 +105,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: COMPANY.name,
           url: COMPANY.website,
           logo: `${SITE_URL}/logos/logo-assertiva-rc.png`,
-          sameAs: [COMPANY.instagram],
+          legalName: COMPANY.legalName,
+          taxID: COMPANY.cnpj,
+          foundingDate: "2017",
+          sameAs: [COMPANY.instagram, COMPANY.linkedin],
           contactPoint: COMPANY.phones.map((p) => ({
             "@type": "ContactPoint",
             telephone: `+55 ${p}`,
