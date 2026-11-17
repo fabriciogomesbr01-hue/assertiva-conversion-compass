@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { AtSign, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { AtSign, Briefcase, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { COMPANY, telHref, track, waLink } from "@/lib/company";
 
@@ -27,6 +27,7 @@ export function SiteFooter() {
             )}
             <li className="inline-flex items-center gap-2"><MapPin className="size-4 text-primary" />{COMPANY.address}</li>
             <li><a href={COMPANY.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground"><AtSign className="size-4 text-primary" />Instagram @assertiva_recuperacaodecredito</a></li>
+            <li><a href={COMPANY.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground"><Briefcase className="size-4 text-primary" />LinkedIn</a></li>
           </ul>
         </div>
         <div>
