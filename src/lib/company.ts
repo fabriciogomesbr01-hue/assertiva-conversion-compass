@@ -9,7 +9,7 @@ export const COMPANY = {
   // WhatsApp do comercial: usado em todos os botões, no rodapé e nas páginas legais.
   whatsapp: "5527997029114",
   whatsappLabel: "(27) 99702-9114",
-  email: "", // Ex.: "contato@assertivarc.com.br". Preencha para exibir no rodapé e nas políticas.
+  email: "fabricio@assertivarc.com.br", // Ex.: "contato@assertivarc.com.br". Preencha para exibir no rodapé e nas políticas.
   instagram: "https://www.instagram.com/assertiva_recuperacaodecredito/",
   linkedin: "https://www.linkedin.com/company/assertiva-recuperacao-de-credito/",
   website: "https://assertivarc.com.br",
