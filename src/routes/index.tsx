@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   ArrowRight,
@@ -250,7 +250,7 @@ function LeadForm({ id }: { id?: string }) {
         <ShieldCheck className="size-4 shrink-0 text-primary" />
         <span>
           Ao enviar, você concorda em ser contatado pela Assertiva sobre esta solicitação. Seus dados são tratados conforme a LGPD e a nossa{" "}
-          <Link to="/politica-de-privacidade" className="underline hover:text-foreground">Política de Privacidade</Link>.
+          <a href="/politica-de-privacidade/" className="underline hover:text-foreground">Política de Privacidade</a>.
         </span>
       </p>
       {aviso && (
