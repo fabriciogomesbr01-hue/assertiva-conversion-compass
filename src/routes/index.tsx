@@ -117,7 +117,7 @@ const faqs = [
   { q: "Como funciona a terceirização da cobrança?", a: "Recebemos sua carteira, fazemos o diagnóstico e assumimos toda a régua de cobrança extrajudicial, com relatórios de cada ação e repasse dos valores recuperados." },
   { q: "Vocês trabalham dentro da LGPD?", a: "Sim. Atuamos exclusivamente dentro da LGPD: os dados são usados só para a finalidade da cobrança, com acesso restrito, armazenamento seguro e abordagem respeitosa ao devedor." },
   { q: "A cobrança prejudica o relacionamento com meus clientes?", a: "Não. Somos especialistas em cobrança humanizada: abordagem respeitosa, transparente e alinhada à sua política comercial e à LGPD." },
-  { q: "Atendem cooperativas de crédito?", a: "Sim. Estamos cadastrados no CAS do Sicredi, o que permite que mais de 100 cooperativas nos contratem de imediato, e atuamos há mais de 8 anos com cooperativas." },
+  { q: "Atendem cooperativas de crédito?", a: "Sim. Estamos cadastrados no CAS do Sicredi, o que permite que mais de 100 cooperativas nos contratem de imediato, e atuamos há 8 anos com cooperativas." },
   { q: "Vocês atuam em todo o Brasil?", a: "Sim. Operação digital nacional e equipe de visita externa fidelizada em todo o território." },
 ];
 
