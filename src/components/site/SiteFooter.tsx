@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { AtSign, Briefcase, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { COMPANY, telHref, track, waLink } from "@/lib/company";
@@ -34,8 +33,8 @@ export function SiteFooter() {
           <h2 className="font-display text-base font-bold text-foreground">Institucional</h2>
           <ul className="mt-3 grid gap-2">
             <li><a href={COMPANY.website} target="_blank" rel="noreferrer" className="hover:text-foreground">Site oficial da Assertiva</a></li>
-            <li><Link to="/politica-de-privacidade" className="hover:text-foreground">Política de Privacidade</Link></li>
-            <li><Link to="/termos-de-uso" className="hover:text-foreground">Termos de Uso</Link></li>
+            <li><a href="/politica-de-privacidade/" className="hover:text-foreground">Política de Privacidade</a></li>
+            <li><a href="/termos-de-uso/" className="hover:text-foreground">Termos de Uso</a></li>
           </ul>
         </div>
       </div>
