@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SimplePage } from "@/components/site/SimplePage";
-import { COMPANY, SITE_URL } from "@/lib/company";
+import { COMPANY } from "@/lib/company";
 
 export const Route = createFileRoute("/termos-de-uso")({
   head: () => ({
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/termos-de-uso")({
       { title: "Termos de Uso | Assertiva" },
       { name: "description", content: "Termos de uso da página de serviços de cobrança e recuperação de crédito da Assertiva Multicanalidade." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/termos-de-uso/` }],
+    links: [{ rel: "canonical", href: `${COMPANY.website}/termos-de-uso/` }],
   }),
   component: TermsPage,
 });

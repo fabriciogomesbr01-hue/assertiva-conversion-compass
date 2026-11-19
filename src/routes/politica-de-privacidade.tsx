@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SimplePage } from "@/components/site/SimplePage";
-import { COMPANY, SITE_URL } from "@/lib/company";
+import { COMPANY } from "@/lib/company";
 
 export const Route = createFileRoute("/politica-de-privacidade")({
   head: () => ({
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/politica-de-privacidade")({
       { title: "Política de Privacidade | Assertiva" },
       { name: "description", content: "Saiba como a Assertiva Multicanalidade coleta, usa e protege seus dados pessoais, em conformidade com a LGPD." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/politica-de-privacidade/` }],
+    links: [{ rel: "canonical", href: `${COMPANY.website}/politica-de-privacidade/` }],
   }),
   component: PrivacyPage,
 });
