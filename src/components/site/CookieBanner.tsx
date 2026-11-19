@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 const KEY = "assertiva-consent";
@@ -50,7 +49,7 @@ export function CookieBanner() {
     <div role="dialog" aria-label="Aviso de cookies" className="fixed inset-x-3 bottom-3 z-[60] flex items-center gap-3 rounded-xl border border-border bg-card/95 px-3 py-2.5 text-xs shadow-lg backdrop-blur md:inset-x-auto md:bottom-4 md:left-4 md:max-w-md md:text-sm">
       <p className="min-w-0 flex-1 text-muted-foreground">
         Usamos cookies para medir nossos anúncios.{" "}
-        <Link to="/politica-de-privacidade" className="font-semibold text-foreground underline">Saiba mais</Link>
+        <a href="/politica-de-privacidade/" className="font-semibold text-foreground underline">Saiba mais</a>
       </p>
       <div className="flex shrink-0 gap-2">
         <button onClick={() => choose("denied")} className="rounded-lg border border-input px-3 py-1.5 font-semibold text-foreground hover:bg-secondary">Recusar</button>

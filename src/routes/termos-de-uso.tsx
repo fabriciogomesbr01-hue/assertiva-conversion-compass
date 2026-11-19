@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { SimplePage } from "@/components/site/SimplePage";
 import { COMPANY, SITE_URL } from "@/lib/company";
@@ -50,7 +50,7 @@ function TermsPage() {
 
       <h2>6. Privacidade</h2>
       <p>
-        O tratamento de dados pessoais segue a nossa <Link to="/politica-de-privacidade">Política de Privacidade</Link>.
+        O tratamento de dados pessoais segue a nossa <a href="/politica-de-privacidade/">Política de Privacidade</a>.
       </p>
 
       <h2>7. Contato</h2>
